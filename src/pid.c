@@ -1,5 +1,5 @@
 #include "pid.h"
-#include <stdlib.h>
+#include <stddef.h>
 
 void PIDInit(PID *pid, float kp, float ki, float kd) {
     if (pid == NULL) {
@@ -15,7 +15,7 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
-    if (dt <= 0) {
+    if (pid == NULL || dt <= 0) {
         return 0;
     }
 
