@@ -24,7 +24,7 @@ typedef struct {
 void PIDInit(PID *pid, float kp, float ki, float kd);
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt);
 void PIDReset(PID *pid);
-void PIDSetOutputLimits(PID *pid, float upper_limit, float lower_limit);
-void PIDSetIntegralLimits(PID *pid, float upper_limit, float lower_limit);
+void PIDSetOutputLimits(PID *pid, float min, float max);
+void PIDSetIntegralLimits(PID *pid, float min, float max);
 
 #endif

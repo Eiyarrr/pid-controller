@@ -53,20 +53,20 @@ void PIDReset(PID *pid) {
     pid->initialized = false;
 }
 
-void PIDSetOutputLimits(PID *pid, float upper_limit, float lower_limit) {
-    if (pid == NULL || lower_limit > upper_limit) {
+void PIDSetOutputLimits(PID *pid, float min, float max) {
+    if (pid == NULL || min > max) {
         return;
     }
 
-    pid->output_max = upper_limit;
-    pid->output_min = lower_limit;
+    pid->output_max = max;
+    pid->output_min = min;
 }
 
-void PIDSetIntegralLimits(PID *pid, float upper_limit, float lower_limit) {
-    if (pid == NULL || lower_limit > upper_limit) {
+void PIDSetIntegralLimits(PID *pid, float min, float max) {
+    if (pid == NULL || min > max) {
         return;
     }
 
-    pid->integral_max = upper_limit;
-    pid->integral_min = lower_limit;
+    pid->integral_max = max;
+    pid->integral_min = min;
 }
