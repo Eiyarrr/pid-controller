@@ -9,7 +9,9 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
     pid->kp = kp;
     pid->ki = ki;
     pid->kd = kd;
-    pid->initialized = true;
+    pid->previous_error = 0;
+    pid->integral = 0;
+    pid->initialized = false;
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
@@ -24,6 +26,8 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
     float i = pid->ki * pid->integral;
 
     if (!pid->initialized) {
+        pid->previous_error = current_error;
+        pid->initialized = true;
         return p + i;
     }
 
@@ -42,4 +46,5 @@ void PIDReset(PID *pid) {
 
     pid->previous_error = 0;
     pid->integral = 0;
+    pid->initialized = false;
 }
