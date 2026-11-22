@@ -23,11 +23,12 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
     pid->integral += current_error * dt;
     float i = pid->ki * pid->integral;
 
-    float d = 0;
-    if (pid->initialized) {
-        float derivative = (current_error - pid->previous_error) / dt;
-        d = pid->kd * derivative;
+    if (!pid->initialized) {
+        return p + i;
     }
+
+    float derivative = (current_error - pid->previous_error) / dt;
+    float d = pid->kd * derivative;
 
     pid->previous_error = current_error;
 
