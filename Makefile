@@ -1,5 +1,5 @@
 BUILD_DIR = build
-TARGET = test_ring_buffer
+TARGET = test_pid
 
 .PHONY: all build run clean
 
