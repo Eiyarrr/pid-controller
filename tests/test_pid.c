@@ -1,0 +1,38 @@
+#include "pid.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+    PID *pid = malloc(sizeof(PID));
+    float kp = 0;
+    float ki = 0;
+    float kd = 0;
+
+    PIDInit(pid, kp, ki, kd);
+
+    float setpoint = 50;
+    float measurement = 0;
+    float dt = 0.5;
+    float command = PIDUpdate(pid, setpoint, measurement, dt);
+    if (command != 0) {
+        printf("expected command of 0\n");
+    }
+
+    pid->kp = 1;
+    measurement += command;
+    dt = 0.3;
+    command = PIDUpdate(pid, setpoint, measurement, dt);
+    if (command != 50) {
+        printf("expected command of 50\n");
+    }
+
+    dt = 1;
+    measurement += command;
+    command = PIDUpdate(pid, setpoint, measurement, dt);
+    if (command != 0) {
+        printf("expected command of 0 (1)\n");
+    }
+
+    printf("tests completed\n");
+    return 0;
+}
