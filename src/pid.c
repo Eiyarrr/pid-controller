@@ -9,20 +9,25 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
     pid->kp = kp;
     pid->ki = ki;
     pid->kd = kd;
+    pid->initialized = true;
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
+    if (dt <= 0) {
+        return 0;
+    }
+
     float current_error = setpoint - measurement;
     float p = pid->kp * current_error;
 
     pid->integral += current_error * dt;
     float i = pid->ki * pid->integral;
 
-    if (dt <= 0) {
-        return p + i;
+    float d = 0;
+    if (pid->initialized) {
+        float derivative = (current_error - pid->previous_error) / dt;
+        d = pid->kd * derivative;
     }
-    float derivative = (current_error - pid->previous_error) / dt;
-    float d = pid->kd * derivative;
 
     pid->previous_error = current_error;
 
