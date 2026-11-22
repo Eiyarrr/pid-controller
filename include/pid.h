@@ -3,12 +3,16 @@
 #define PID_H
 
 typedef struct {
-    double kp;
-    double ki;
-    double kd;
+    float kp;
+    float ki;
+    float kd;
 
-    double previous_error;
-    double integral;
+    float previous_error;
+    float integral;
 } PID;
+
+void PIDInit(PID *pid, float kp, float ki, float kd);
+float PIDUpdate(PID *pid, float setpoint, float measurement, float dt);
+void PIDReset(PID *pid);
 
 #endif
