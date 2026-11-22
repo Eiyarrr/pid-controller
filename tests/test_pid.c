@@ -33,6 +33,22 @@ int main(void) {
         printf("expected command of 0 (1)\n");
     }
 
+    PIDReset(pid);
+    pid->kp = 0;
+    pid->ki = 1;
+    measurement = 0;
+    dt = 0.1;
+    command = PIDUpdate(pid, setpoint, measurement, dt);
+    if (command != 5) {
+        printf("expected command of 5, got %f\n", command);
+    }
+
+    measurement += command;
+    command = PIDUpdate(pid, setpoint, measurement, dt);
+    if (command != 9.5) {
+        printf("expected command of 9.5, got %f\n", command);
+    }
+
     printf("tests completed\n");
     return 0;
 }
