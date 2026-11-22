@@ -12,6 +12,10 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
     pid->previous_error = 0;
     pid->integral = 0;
     pid->initialized = false;
+    pid->output_max = 0;
+    pid->output_min = 0;
+    pid->integral_max = 0;
+    pid->integral_min = 0;
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
@@ -47,4 +51,22 @@ void PIDReset(PID *pid) {
     pid->previous_error = 0;
     pid->integral = 0;
     pid->initialized = false;
+}
+
+void PIDSetOutputLimits(PID *pid, float upper_limit, float lower_limit) {
+    if (pid == NULL || lower_limit > upper_limit) {
+        return;
+    }
+
+    pid->output_max = upper_limit;
+    pid->output_min = lower_limit;
+}
+
+void PIDSetIntegralLimits(PID *pid, float upper_limit, float lower_limit) {
+    if (pid == NULL || lower_limit > upper_limit) {
+        return;
+    }
+
+    pid->integral_max = upper_limit;
+    pid->integral_min = lower_limit;
 }
