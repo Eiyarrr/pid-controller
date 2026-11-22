@@ -1,4 +1,5 @@
 #include "pid.h"
+#include <math.h>
 #include <stddef.h>
 
 void PIDInit(PID *pid, float kp, float ki, float kd) {
@@ -19,20 +20,30 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
-    if (pid == NULL || dt <= 0) {
+    if (pid == NULL || dt <= 0 || dt == NAN) {
+        return 0;
+    }
+    if (pid->output_min > pid->output_max ||
+        pid->integral_min > pid->integral_max) {
         return 0;
     }
 
     float current_error = setpoint - measurement;
     float p = pid->kp * current_error;
 
-    pid->integral += current_error * dt;
+    float integral = pid->integral + current_error * dt;
+    float clamped_integral =
+        fmax(pid->integral_min, fmin(integral, pid->integral_max));
+    pid->integral = clamped_integral;
     float i = pid->ki * pid->integral;
 
     if (!pid->initialized) {
         pid->previous_error = current_error;
         pid->initialized = true;
-        return p + i;
+        float output = p + i;
+        float clamped_output =
+            fmaxf(pid->output_min, fminf(output, pid->output_max));
+        return clamped_output;
     }
 
     float derivative = (current_error - pid->previous_error) / dt;
@@ -40,7 +51,9 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
 
     pid->previous_error = current_error;
 
-    return p + i + d;
+    float output = p + i + d;
+    float clamped_output = fmaxf(pid->output_min, fminf(output, pid->output_max));
+    return clamped_output;
 }
 
 void PIDReset(PID *pid) {
