@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 void PIDInit(PID *pid, float kp, float ki, float kd) {
-    if (pid == NULL) {
+    if (pid == NULL || !isfinite(kp) || !isfinite(ki) || !isfinite(kd)) {
         return;
     }
 
@@ -22,7 +22,7 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
-    if (pid == NULL || dt <= 0 || dt == NAN) {
+    if (pid == NULL || dt <= 0 || !isfinite(dt)) {
         return 0;
     }
     if (pid->output_min > pid->output_max ||
@@ -74,7 +74,7 @@ void PIDReset(PID *pid) {
 }
 
 void PIDSetOutputLimits(PID *pid, float min, float max) {
-    if (pid == NULL || min > max) {
+    if (pid == NULL || min > max || !isfinite(min) || !isfinite(max)) {
         return;
     }
 
@@ -83,10 +83,18 @@ void PIDSetOutputLimits(PID *pid, float min, float max) {
 }
 
 void PIDSetIntegralLimits(PID *pid, float min, float max) {
-    if (pid == NULL || min > max) {
+    if (pid == NULL || min > max || !isfinite(min) || !isfinite(max)) {
         return;
     }
 
     pid->integral_max = max;
     pid->integral_min = min;
+}
+
+void PIDSetDerivativeSmoothing(PID *pid, float derivative_smoothing) {
+    if (pid == NULL || !isfinite(derivative_smoothing)) {
+        return;
+    }
+
+    pid->derivative_smoothing = derivative_smoothing;
 }

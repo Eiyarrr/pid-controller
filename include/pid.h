@@ -29,5 +29,6 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt);
 void PIDReset(PID *pid);
 void PIDSetOutputLimits(PID *pid, float min, float max);
 void PIDSetIntegralLimits(PID *pid, float min, float max);
+void PIDSetDerivativeSmoothing(PID *pid, float derivative_smoothing);
 
 #endif
