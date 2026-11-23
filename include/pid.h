@@ -14,7 +14,7 @@ typedef struct {
     float integral_max;
     float integral_min;
 
-    float previous_derivative;
+    float previous_filtered_derivative;
     float derivative_filter_alpha;
 
     float output_max;
