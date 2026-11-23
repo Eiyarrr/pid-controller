@@ -24,13 +24,11 @@ typedef struct {
 } PID;
 
 void PIDInit(PID *pid, float kp, float ki, float kd);
-
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt);
+void PIDReset(PID *pid);
 
 void PIDSetIntegralLimits(PID *pid, float min, float max);
 void PIDSetDerivativeSmoothing(PID *pid, float derivative_smoothing);
 void PIDSetOutputLimits(PID *pid, float min, float max);
-
-void PIDReset(PID *pid);
 
 #endif

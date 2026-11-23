@@ -49,8 +49,8 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
     if (!pid->initialized) {
         pid->previous_error = current_error;
         pid->initialized = true;
-        float output = p + i;
-        return clamp(output, pid->output_min, pid->output_max);
+        float raw_output = p + i;
+        return clamp(raw_output, pid->output_min, pid->output_max);
     }
 
     float raw_derivative = (current_error - pid->previous_error) / dt;
@@ -62,8 +62,19 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
     pid->previous_filtered_derivative = filtered_derivative;
     pid->previous_error = current_error;
 
-    float output = p + i + d;
-    return clamp(output, pid->output_min, pid->output_max);
+    float raw_output = p + i + d;
+    return clamp(raw_output, pid->output_min, pid->output_max);
+}
+
+void PIDReset(PID *pid) {
+    if (pid == NULL) {
+        return;
+    }
+
+    pid->previous_error = 0;
+    pid->integral = 0;
+    pid->initialized = false;
+    pid->previous_filtered_derivative = 0;
 }
 
 void PIDSetIntegralLimits(PID *pid, float min, float max) {
@@ -91,15 +102,4 @@ void PIDSetOutputLimits(PID *pid, float min, float max) {
 
     pid->output_max = max;
     pid->output_min = min;
-}
-
-void PIDReset(PID *pid) {
-    if (pid == NULL) {
-        return;
-    }
-
-    pid->previous_error = 0;
-    pid->integral = 0;
-    pid->initialized = false;
-    pid->previous_filtered_derivative = 0;
 }
