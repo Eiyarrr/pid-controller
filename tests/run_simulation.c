@@ -3,6 +3,7 @@
 #include "tests.h"
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 void run_simulation() {
@@ -27,6 +28,7 @@ void run_simulation() {
 
     PID *pid = malloc(sizeof(PID));
     if (pid == NULL) {
+        printf("failed to malloc pid");
         return;
     }
     PIDInit(pid, kp, ki, kd);
@@ -35,14 +37,23 @@ void run_simulation() {
 
     Plant *plant = malloc(sizeof(Plant));
     if (plant == NULL) {
+        printf("failed to malloc plant");
         return;
     }
     PlantInit(plant, starting_angle, inertia, damping);
+
+    FILE *file = fopen("simulation_results", "w");
+    if (file == NULL) {
+        printf("failed to open file");
+        return;
+    }
 
     float measurement;
     float command;
 
     for (int i = 0; i < max_loops; i++) {
+        fprintf(file, "%f : %f", dt * i, plant->angle);
+
         measurement = plant->angle;
         command = PIDUpdate(pid, setpoint, measurement, dt);
         PlantUpdate(plant, command, dt);
