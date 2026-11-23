@@ -2,6 +2,10 @@
 #include <math.h>
 #include <stddef.h>
 
+static float clamp(float value, float min, float max) {
+    return fmaxf(min, fminf(value, max));
+}
+
 void PIDInit(PID *pid, float kp, float ki, float kd) {
     if (pid == NULL || !isfinite(kp) || !isfinite(ki) || !isfinite(kd)) {
         return;
@@ -38,19 +42,15 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
     float current_error = setpoint - measurement;
     float p = pid->kp * current_error;
 
-    float integral = pid->integral + current_error * dt;
-    float clamped_integral =
-        fmaxf(pid->integral_min, fminf(integral, pid->integral_max));
-    pid->integral = clamped_integral;
+    float raw_integral = pid->integral + current_error * dt;
+    pid->integral = clamp(raw_integral, pid->integral_min, pid->integral_max);
     float i = pid->ki * pid->integral;
 
     if (!pid->initialized) {
         pid->previous_error = current_error;
         pid->initialized = true;
         float output = p + i;
-        float clamped_output =
-            fmaxf(pid->output_min, fminf(output, pid->output_max));
-        return clamped_output;
+        return clamp(output, pid->output_min, pid->output_max);
     }
 
     float raw_derivative = (current_error - pid->previous_error) / dt;
@@ -58,14 +58,12 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
         pid->derivative_filter_alpha * raw_derivative +
         (1 - pid->derivative_filter_alpha) * pid->previous_derivative;
     float d = pid->kd * filtered_derivative;
-    pid->previous_derivative = filtered_derivative;
 
+    pid->previous_derivative = filtered_derivative;
     pid->previous_error = current_error;
 
     float output = p + i + d;
-    float clamped_output =
-        fmaxf(pid->output_min, fminf(output, pid->output_max));
-    return clamped_output;
+    return clamp(output, pid->output_min, pid->output_max);
 }
 
 void PIDSetIntegralLimits(PID *pid, float min, float max) {
