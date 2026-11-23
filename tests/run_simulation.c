@@ -2,6 +2,7 @@
 #include "plant.h"
 #include "tests.h"
 
+#include <math.h>
 #include <stdlib.h>
 
 void run_simulation() {
@@ -9,17 +10,25 @@ void run_simulation() {
     float ki = 0;
     float kd = 0;
 
+    float min_integral = -10;
+    float max_integral = 10;
+
+    float min_command = -10;
+    float max_command = 10;
+
     float starting_angle = 0;
-    float inertia = 0;
+    float inertia = 10;
     float damping = 0;
 
-    float setpoint = 0;
-    float dt = 0;
+    float setpoint = M_PI / 2;
+    float dt = 0.01;
 
-    int max_loops = 0;
+    int max_loops = 500;
 
     PID *pid = malloc(sizeof(PID));
     PIDInit(pid, kp, ki, kd);
+    PIDSetIntegralLimits(pid, min_integral, max_integral);
+    PIDSetOutputLimits(pid, min_command, max_command);
 
     Plant *plant = malloc(sizeof(Plant));
     PlantInit(plant, starting_angle, inertia, damping);
