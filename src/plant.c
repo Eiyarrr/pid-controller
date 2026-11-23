@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-static bool PlantIsValid(Plant *plant) {
+static bool PlantIsValid(const Plant *plant) {
     if (plant == NULL || plant->inertia <= 0 || !isfinite(plant->angle) ||
         !isfinite(plant->angular_velocity) || !isfinite(plant->inertia) ||
         !isfinite(plant->damping)) {
@@ -32,10 +32,12 @@ void PlantUpdate(Plant *plant, float command, float dt) {
 
     float acceleration =
         (command - plant->damping * plant->angular_velocity) / plant->inertia;
-
     float velocity = plant->angular_velocity + acceleration * dt;
-
     float angle = plant->angle + velocity * dt;
+
+    if (!isfinite(acceleration) || !isfinite(velocity) || !isfinite(angle)) {
+        return;
+    }
 
     plant->angle = angle;
     plant->angular_velocity = velocity;
