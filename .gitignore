@@ -5,6 +5,9 @@ cmake-build-*/
 # Compiled binaries and object files
 /program
 
+# Simulation result files
+tests/simulation_results
+
 # CMake generated files
 CMakeCache.txt
 CMakeFiles/
