@@ -7,26 +7,26 @@
 #include <stdlib.h>
 
 void run_simulation() {
-    float kp = 1.2;
-    float ki = 0.07;
-    float kd = 1.1;
+    float kp = 0.02;
+    float ki = 0.0003;
+    float kd = 0.003;
 
-    float min_integral = -10;
-    float max_integral = 10;
+    float min_integral = -0.01;
+    float max_integral = 0.01;
 
-    float min_output = -10;
-    float max_output = 10;
+    float min_output = -0.003;
+    float max_output = 0.003;
 
     float derivative_smoothing_alpha = 1;
 
     float starting_angle = 0;
-    float inertia = 10;
-    float damping = 0;
+    float inertia = 0.00015;
+    float damping = 0.00002;
 
     float setpoint = M_PI / 2;
     float dt = 0.01;
 
-    int max_loops = 500;
+    int max_loops = 1000;
 
     PID *pid = malloc(sizeof(PID));
     if (pid == NULL) {
@@ -53,7 +53,7 @@ void run_simulation() {
         free(plant);
         return;
     }
-    fprintf(file, "setpoint: %f| kp/i/d: %f/%f/%f\n", setpoint, kp, ki, kd);
+    fprintf(file, "setpoint: %f | kp/ki/kd: %f/%f/%f | inertia: %f | damping: %f\n", setpoint, kp, ki, kd, inertia, damping);
 
     float measurement;
     float command;
