@@ -51,6 +51,7 @@ void run_simulation() {
     float measurement;
     float command;
 
+    printf("starting simulation");
     for (int i = 0; i < max_loops; i++) {
         fprintf(file, "%f : %f", dt * i, plant->angle);
 
@@ -61,4 +62,6 @@ void run_simulation() {
 
     free(pid);
     free(plant);
+
+    printf("finished simulation");
 }

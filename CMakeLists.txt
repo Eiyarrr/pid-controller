@@ -11,7 +11,15 @@ add_library(pid
     src/pid.c
 )
 
+add_library(plant
+    src/plant.c
+)
+
 target_include_directories(pid PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+target_include_directories(plant PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -23,6 +31,7 @@ add_executable(test
 
 target_link_libraries(test PRIVATE
     pid
+    plant
 )
 
 target_link_libraries(pid PUBLIC
