@@ -30,6 +30,7 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
+    // Ensure valid parameters
     if (pid == NULL || dt <= 0 || !isfinite(dt) || !isfinite(setpoint) ||
         !isfinite(measurement)) {
         return 0;
@@ -39,13 +40,16 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
         return 0;
     }
 
+    // Calculate error and proportional contribution
     float current_error = setpoint - measurement;
     float p = pid->kp * current_error;
 
+    // Calculate and clamp integral contribution
     float raw_integral = pid->integral + current_error * dt;
     pid->integral = clamp(raw_integral, pid->integral_min, pid->integral_max);
     float i = pid->ki * pid->integral;
 
+    // Handle first update (no derivative history)
     if (!pid->initialized) {
         pid->previous_error = current_error;
         pid->initialized = true;
@@ -53,6 +57,7 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
         return clamp(raw_output, pid->output_min, pid->output_max);
     }
 
+    // Calculate and filter derivative contribution
     float raw_derivative = (current_error - pid->previous_error) / dt;
     float filtered_derivative =
         pid->derivative_filter_alpha * raw_derivative +

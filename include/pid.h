@@ -9,11 +9,11 @@ typedef struct {
     float ki;
     float kd;
 
-    float previous_error;
     float integral;
     float integral_max;
     float integral_min;
 
+    float previous_error;
     float previous_filtered_derivative;
     float derivative_filter_alpha;
 
