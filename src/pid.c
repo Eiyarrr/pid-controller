@@ -22,7 +22,8 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
-    if (pid == NULL || dt <= 0 || !isfinite(dt)) {
+    if (pid == NULL || dt <= 0 || !isfinite(dt) || !isfinite(setpoint) ||
+        !isfinite(measurement)) {
         return 0;
     }
     if (pid->output_min > pid->output_max ||
