@@ -13,8 +13,8 @@ void run_simulation() {
     float min_integral = -10;
     float max_integral = 10;
 
-    float min_command = -10;
-    float max_command = 10;
+    float min_output = -10;
+    float max_output = 10;
 
     float starting_angle = 0;
     float inertia = 10;
@@ -26,11 +26,17 @@ void run_simulation() {
     int max_loops = 500;
 
     PID *pid = malloc(sizeof(PID));
+    if (pid == NULL) {
+        return;
+    }
     PIDInit(pid, kp, ki, kd);
     PIDSetIntegralLimits(pid, min_integral, max_integral);
-    PIDSetOutputLimits(pid, min_command, max_command);
+    PIDSetOutputLimits(pid, min_output, max_output);
 
     Plant *plant = malloc(sizeof(Plant));
+    if (plant == NULL) {
+        return;
+    }
     PlantInit(plant, starting_angle, inertia, damping);
 
     float measurement;
