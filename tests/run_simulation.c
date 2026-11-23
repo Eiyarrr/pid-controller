@@ -47,21 +47,25 @@ void run_simulation() {
         printf("failed to open file\n");
         return;
     }
+    fprintf(file, "setpoint: %f", setpoint);
 
     float measurement;
     float command;
 
     printf("starting simulation\n");
     for (int i = 0; i < max_loops; i++) {
-        fprintf(file, "%f : %f\n", dt * i, plant->angle);
-
         measurement = plant->angle;
         command = PIDUpdate(pid, setpoint, measurement, dt);
         PlantUpdate(plant, command, dt);
+
+        fprintf(file, "dt: %f | cmd: %f | angle: %f\n", dt * i, command,
+                plant->angle);
     }
 
     free(pid);
     free(plant);
+
+    fflush(file);
     fclose(file);
 
     printf("finished simulation\n");
