@@ -92,7 +92,8 @@ void PIDSetIntegralLimits(PID *pid, float min, float max) {
 }
 
 void PIDSetDerivativeSmoothing(PID *pid, float derivative_smoothing) {
-    if (pid == NULL || !isfinite(derivative_smoothing)) {
+    if (pid == NULL || !isfinite(derivative_smoothing) ||
+        derivative_smoothing > 1 || derivative_smoothing < 0) {
         return;
     }
 
