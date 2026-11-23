@@ -12,5 +12,6 @@ typedef struct {
 } Plant;
 
 void PlantInit(Plant *plant, float angle);
+void PlantUpdate(Plant *plant, float command, float dt);
 
 #endif
