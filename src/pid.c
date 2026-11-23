@@ -17,6 +17,8 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
     pid->output_min = 0;
     pid->integral_max = 0;
     pid->integral_min = 0;
+    pid->previous_derivative = 0;
+    pid->derivative_smoothing = 0;
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
@@ -46,13 +48,18 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
         return clamped_output;
     }
 
-    float derivative = (current_error - pid->previous_error) / dt;
-    float d = pid->kd * derivative;
+    float raw_derivative = (current_error - pid->previous_error) / dt;
+    float filtered_derivative =
+        pid->derivative_smoothing +
+        (1 - pid->derivative_smoothing) * pid->previous_derivative;
+    float d = pid->kd * filtered_derivative;
+    pid->previous_derivative = filtered_derivative;
 
     pid->previous_error = current_error;
 
     float output = p + i + d;
-    float clamped_output = fmaxf(pid->output_min, fminf(output, pid->output_max));
+    float clamped_output =
+        fmaxf(pid->output_min, fminf(output, pid->output_max));
     return clamped_output;
 }
 
