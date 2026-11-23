@@ -50,7 +50,7 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
 
     float raw_derivative = (current_error - pid->previous_error) / dt;
     float filtered_derivative =
-        pid->derivative_smoothing +
+        pid->derivative_smoothing * raw_derivative +
         (1 - pid->derivative_smoothing) * pid->previous_derivative;
     float d = pid->kd * filtered_derivative;
     pid->previous_derivative = filtered_derivative;
