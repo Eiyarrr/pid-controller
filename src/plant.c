@@ -14,7 +14,8 @@ static bool PlantIsValid(const Plant *plant) {
 }
 
 void PlantInit(Plant *plant, float angle, float inertia, float damping) {
-    if (plant == NULL) {
+    if (plant == NULL || inertia <= 0 || !isfinite(inertia) || damping < 0 ||
+        !isfinite(damping)) {
         return;
     }
 
