@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 void run_simulation() {
-    float kp = 0;
+    float kp = 3;
     float ki = 0;
     float kd = 0;
 
@@ -38,6 +38,7 @@ void run_simulation() {
     Plant *plant = malloc(sizeof(Plant));
     if (plant == NULL) {
         printf("failed to malloc plant\n");
+        free(pid);
         return;
     }
     PlantInit(plant, starting_angle, inertia, damping);
@@ -45,9 +46,11 @@ void run_simulation() {
     FILE *file = fopen("tests/simulation_results", "w");
     if (file == NULL) {
         printf("failed to open file\n");
+        free(pid);
+        free(plant);
         return;
     }
-    fprintf(file, "setpoint: %f", setpoint);
+    fprintf(file, "setpoint: %f\n", setpoint);
 
     float measurement;
     float command;
