@@ -13,7 +13,7 @@ static bool PlantIsValid(const Plant *plant) {
     return true;
 }
 
-void PlantInit(Plant *plant, float angle) {
+void PlantInit(Plant *plant, float angle, float inertia, float damping) {
     if (plant == NULL) {
         return;
     }
@@ -21,8 +21,8 @@ void PlantInit(Plant *plant, float angle) {
     plant->angle = angle;
     plant->angular_velocity = 0;
 
-    plant->inertia = 0;
-    plant->damping = 0;
+    plant->inertia = inertia;
+    plant->damping = damping;
 }
 
 void PlantUpdate(Plant *plant, float command, float dt) {

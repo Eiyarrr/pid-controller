@@ -10,7 +10,7 @@ typedef struct {
     float damping;
 } Plant;
 
-void PlantInit(Plant *plant, float angle);
+void PlantInit(Plant *plant, float angle, float inertia, float damping);
 void PlantUpdate(Plant *plant, float command, float dt);
 
 #endif
