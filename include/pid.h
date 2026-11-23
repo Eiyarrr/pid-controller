@@ -21,7 +21,7 @@ typedef struct {
     float integral_min;
 
     float previous_derivative;
-    float derivative_smoothing;
+    float derivative_filter_alpha;
 } PID;
 
 void PIDInit(PID *pid, float kp, float ki, float kd);

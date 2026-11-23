@@ -18,7 +18,7 @@ void PIDInit(PID *pid, float kp, float ki, float kd) {
     pid->integral_max = 0;
     pid->integral_min = 0;
     pid->previous_derivative = 0;
-    pid->derivative_smoothing = 0;
+    pid->derivative_filter_alpha = 0;
 }
 
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
@@ -50,8 +50,8 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
 
     float raw_derivative = (current_error - pid->previous_error) / dt;
     float filtered_derivative =
-        pid->derivative_smoothing * raw_derivative +
-        (1 - pid->derivative_smoothing) * pid->previous_derivative;
+        pid->derivative_filter_alpha * raw_derivative +
+        (1 - pid->derivative_filter_alpha) * pid->previous_derivative;
     float d = pid->kd * filtered_derivative;
     pid->previous_derivative = filtered_derivative;
 
@@ -71,6 +71,7 @@ void PIDReset(PID *pid) {
     pid->previous_error = 0;
     pid->integral = 0;
     pid->initialized = false;
+    pid->previous_derivative = 0;
 }
 
 void PIDSetOutputLimits(PID *pid, float min, float max) {
@@ -91,11 +92,11 @@ void PIDSetIntegralLimits(PID *pid, float min, float max) {
     pid->integral_min = min;
 }
 
-void PIDSetDerivativeSmoothing(PID *pid, float derivative_smoothing) {
-    if (pid == NULL || !isfinite(derivative_smoothing) ||
-        derivative_smoothing > 1 || derivative_smoothing < 0) {
+void PIDSetDerivativeSmoothing(PID *pid, float derivative_filter_alpha) {
+    if (pid == NULL || !isfinite(derivative_filter_alpha) ||
+        derivative_filter_alpha > 1 || derivative_filter_alpha < 0) {
         return;
     }
 
-    pid->derivative_smoothing = derivative_smoothing;
+    pid->derivative_filter_alpha = derivative_filter_alpha;
 }
