@@ -5,7 +5,6 @@
 typedef struct {
     float angle;
     float angular_velocity;
-    float angular_acceleration;
 
     float inertia;
     float damping;

@@ -4,7 +4,6 @@
 void PlantInit(Plant *plant, float angle) {
     plant->angle = angle;
     plant->angular_velocity = 0;
-    plant->angular_acceleration = 0;
 
     plant->inertia = 0;
     plant->damping = 0;
@@ -14,14 +13,15 @@ void PlantUpdate(Plant *plant, float command, float dt) {
     if (plant == NULL) {
         return;
     }
-
-    float new_angle = plant->angle + plant->angular_velocity * dt;
-    float new_velocity =
-        plant->angular_velocity + plant->angular_acceleration * dt;
-    float new_acceleration =
+    
+    float acceleration =
         (command - plant->damping * plant->angular_velocity) / plant->inertia;
 
-    plant->angle = new_angle;
-    plant->angular_velocity = new_velocity;
-    plant->angular_acceleration = new_acceleration;
+    float velocity =
+        plant->angular_velocity + acceleration * dt;
+
+    float angle = plant->angle + velocity * dt;
+
+    plant->angle = angle;
+    plant->angular_velocity = velocity;
 }
