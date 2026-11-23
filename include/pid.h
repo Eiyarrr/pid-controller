@@ -11,24 +11,26 @@ typedef struct {
 
     float previous_error;
     float integral;
-
-    bool initialized;
-
-    float output_max;
-    float output_min;
-
     float integral_max;
     float integral_min;
 
     float previous_derivative;
     float derivative_filter_alpha;
+
+    float output_max;
+    float output_min;
+
+    bool initialized;
 } PID;
 
 void PIDInit(PID *pid, float kp, float ki, float kd);
+
 float PIDUpdate(PID *pid, float setpoint, float measurement, float dt);
-void PIDReset(PID *pid);
-void PIDSetOutputLimits(PID *pid, float min, float max);
+
 void PIDSetIntegralLimits(PID *pid, float min, float max);
 void PIDSetDerivativeSmoothing(PID *pid, float derivative_smoothing);
+void PIDSetOutputLimits(PID *pid, float min, float max);
+
+void PIDReset(PID *pid);
 
 #endif
