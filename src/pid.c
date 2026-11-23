@@ -35,7 +35,7 @@ float PIDUpdate(PID *pid, float setpoint, float measurement, float dt) {
 
     float integral = pid->integral + current_error * dt;
     float clamped_integral =
-        fmax(pid->integral_min, fmin(integral, pid->integral_max));
+        fmaxf(pid->integral_min, fminf(integral, pid->integral_max));
     pid->integral = clamped_integral;
     float i = pid->ki * pid->integral;
 
