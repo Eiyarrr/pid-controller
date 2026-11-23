@@ -1,8 +1,11 @@
 #include "pid.h"
+#include "tests.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(void) {
+int test_pid(void) {
+    int test_status = 0;
+
     PID *pid = malloc(sizeof(PID));
     float kp = 0;
     float ki = 0;
@@ -16,6 +19,7 @@ int main(void) {
     float command = PIDUpdate(pid, setpoint, measurement, dt);
     if (command != 0) {
         printf("expected command of 0, got %f\n", command);
+        test_status = 1;
     }
 
     pid->kp = 1;
@@ -24,6 +28,7 @@ int main(void) {
     command = PIDUpdate(pid, setpoint, measurement, dt);
     if (command != 50) {
         printf("expected command of 50, got %f\n", command);
+        test_status = 1;
     }
 
     dt = 1;
@@ -31,6 +36,7 @@ int main(void) {
     command = PIDUpdate(pid, setpoint, measurement, dt);
     if (command != 0) {
         printf("expected command of 0 (1), got %f\n", command);
+        test_status = 1;
     }
 
     PIDReset(pid);
@@ -41,12 +47,14 @@ int main(void) {
     command = PIDUpdate(pid, setpoint, measurement, dt);
     if (command != 5) {
         printf("expected command of 5, got %f\n", command);
+        test_status = 1;
     }
 
     measurement += command;
     command = PIDUpdate(pid, setpoint, measurement, dt);
     if (command != 9.5) {
         printf("expected command of 9.5, got %f\n", command);
+        test_status = 1;
     }
 
     PIDReset(pid);
@@ -57,12 +65,14 @@ int main(void) {
     command = PIDUpdate(pid, setpoint, measurement, dt);
     if (command != 0) {
         printf("expected command of 0, got %f\n", command);
+        test_status = 1;
     }
 
     measurement += command;
     command = PIDUpdate(pid, setpoint, measurement, dt);
     if (command != 0) {
         printf("expected command of 0, got %f\n", command);
+        test_status = 1;
     }
 
     printf("tests completed\n");
