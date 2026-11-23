@@ -5,10 +5,12 @@
 typedef struct {
     float angle;
     float angular_velocity;
-    float angluar_acceleration;
+    float angular_acceleration;
 
     float inertia;
     float damping;
 } Plant;
+
+void PlantInit(Plant *plant, float angle);
 
 #endif
