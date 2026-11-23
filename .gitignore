@@ -6,7 +6,7 @@ cmake-build-*/
 /program
 
 # Simulation result files
-tests/simulation_results
+simulation_results
 
 # CMake generated files
 CMakeCache.txt

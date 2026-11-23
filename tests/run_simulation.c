@@ -28,7 +28,7 @@ void run_simulation() {
 
     PID *pid = malloc(sizeof(PID));
     if (pid == NULL) {
-        printf("failed to malloc pid");
+        printf("failed to malloc pid\n");
         return;
     }
     PIDInit(pid, kp, ki, kd);
@@ -37,23 +37,23 @@ void run_simulation() {
 
     Plant *plant = malloc(sizeof(Plant));
     if (plant == NULL) {
-        printf("failed to malloc plant");
+        printf("failed to malloc plant\n");
         return;
     }
     PlantInit(plant, starting_angle, inertia, damping);
 
-    FILE *file = fopen("simulation_results", "w");
+    FILE *file = fopen("tests/simulation_results", "w");
     if (file == NULL) {
-        printf("failed to open file");
+        printf("failed to open file\n");
         return;
     }
 
     float measurement;
     float command;
 
-    printf("starting simulation");
+    printf("starting simulation\n");
     for (int i = 0; i < max_loops; i++) {
-        fprintf(file, "%f : %f", dt * i, plant->angle);
+        fprintf(file, "%f : %f\n", dt * i, plant->angle);
 
         measurement = plant->angle;
         command = PIDUpdate(pid, setpoint, measurement, dt);
@@ -62,6 +62,7 @@ void run_simulation() {
 
     free(pid);
     free(plant);
+    fclose(file);
 
-    printf("finished simulation");
+    printf("finished simulation\n");
 }
