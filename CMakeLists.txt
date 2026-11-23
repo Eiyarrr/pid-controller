@@ -15,10 +15,16 @@ target_include_directories(pid PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-add_executable(test_pid
+add_executable(test
+    tests/main.c
     tests/test_pid.c
+    tests/run_simulation.c
 )
 
-target_link_libraries(test_pid PRIVATE
+target_link_libraries(test PRIVATE
     pid
+)
+
+target_link_libraries(pid PUBLIC
+    m
 )
